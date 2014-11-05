@@ -134,8 +134,8 @@
 
     function callback(e, id) {
       var d = new Date().getTime();
-      setItem('session_id', id);
       setItem('session_timestamp', d);
+      if (!e && id) setItem('session_id', id);
       mezure.__debug('session logged: (%s, %s)', id, d);
       setTimeout(handleSession, config.sessionTimeout);
     }
@@ -241,7 +241,7 @@
 
   function setItem(s, d) {
     var ls = root && root.localStorage;
-    if (!ls) return;
+    if (!d || !ls) return;
     ls.setItem('mezure-' + s, d);
   }
 
