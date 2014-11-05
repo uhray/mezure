@@ -43,9 +43,9 @@
     mezure.__started_session = true;
   }
 
-  mezure.activity = function(name, value, meta, ids) {
+  mezure.activity = function(name, meta, ids) {
     var name = name && '-mezure-activity-' + name,
-        prep = prepArgs(name, value || 1, meta, ids, null);
+        prep = prepArgs(name, 1, meta, ids, null);
     if (!prep) return;
     mezure.__debug('going to create record %s --> %j', name, prep.obj);
     sendRecord(name, 'activity', prep.obj, prep.cb);
