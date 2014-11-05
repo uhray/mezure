@@ -64,14 +64,14 @@ Merges *options* onto the current configurations. The available options are:
 Log's the user's activity.
 
   * *name* (type=String, required) - the unique name of this activity type.
-  * *meta* (type=Object, default=`{}`) - [metadata](#identifiers) about this action.
+  * *meta* (type=Object, default=`{}`) - [metadata](#metadata) about this action.
   * *ids* (type=Object, default=`{}`) - [identifiers](#identifiers) for this action.
 
 <a href="#configure" name="configure">#</a> mezure.**configure**(*meta*,  *ids*)
 
 If called the first time, this turns on session tracking and then sets the data for tracking. Otherwise, it just updates the data.
 
-  * *meta* (type=Object, default=`{}`) - [metadata](#identifiers) about this session.
+  * *meta* (type=Object, default=`{}`) - [metadata](#metadata) about this session.
   * *ids* (type=Object, default=`{}`) - [identifiers](#identifiers) for this session.
 
 Session tracking is pretty simple. Every `sessionTimeout` (see [configure](#configure)) milliseconds it updates the current session with the new end time being "now", unless the browser window is not currently active (leaving a browser window open on a tab does not count as a session). If a session is inactive for `sessionReset` (see [configure](#configure)) milliseconds, then a new session will be created. Mezure uses your browser's [localStorage](http://diveintohtml5.info/storage.html) to keep track of the current active session. So if you have multiple browser windows open, it will be recorded as only one session.
