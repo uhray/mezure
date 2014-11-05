@@ -41,7 +41,7 @@ Mezure allows you to track application behavior to gather and measure insights a
 
 #### Activity Stream
 
-An activity stream is a pathway of actions in the app. It begins when you open the app in a window/tab on your browser and ends when you stop making actions. If you have multiple windows or tabs open, they will count as different activity streams. Likewise, if you click a link that opens a window as a `target="_blank"`, this begins a new activity streams.
+An activity stream is a pathway of actions in the app. It begins when you open the app in a window/tab on your browser and ends when you stop making actions. If you have multiple windows or tabs open, they will count as different activity streams. Likewise, if you click a link that opens a window as a `target="_blank"`, this begins a new activity stream.
 
 To log things to a current activity stream, see the [activity](#activity) method.
 
@@ -76,7 +76,7 @@ Merges *options* onto the current configurations. The available options are:
 
   -- DEPRECATED  --
 
-<a href="#configure" name="configure">#</a> mezure.**activity**(*name*,  *meta*,  *ids*)
+<a href="#activity" name="activity">#</a> mezure.**activity**(*name*,  *meta*,  *ids*)
 
 Log's the user's activity.
 
@@ -84,7 +84,7 @@ Log's the user's activity.
   * *meta* (type=Object, default=`{}`) - [metadata](#metadata) about this action.
   * *ids* (type=Object, default=`{}`) - [identifiers](#identifiers) for this action.
 
-<a href="#configure" name="configure">#</a> mezure.**configure**(*meta*,  *ids*)
+<a href="#session" name="session">#</a> mezure.**session**(*meta*,  *ids*)
 
 If called the first time, this turns on session tracking and then sets the data for tracking. Otherwise, it just updates the data.
 
