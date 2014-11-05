@@ -37,11 +37,28 @@ Mezure allows you to track application behavior to gather and measure insights a
   * activity - track users' activity on the site (what did they do?)
   * sessions - track users' sessions on the site (how many times they came and how long they stayed).
 
-### Metadata
+### Glossary
+
+#### Activity Stream
+
+An activity stream is a pathway of actions in the app. It begins when you open the app in a window/tab on your browser and ends when you stop making actions. If you have multiple windows or tabs open, they will count as different activity streams. Likewise, if you click a link that opens a window as a `target="_blank"`, this begins a new activity streams.
+
+To log things to a current activity stream, see the [activity](#activity) method.
+
+#### Sessions
+
+A session has these rules:
+
+  * It starts when you open any page for the site
+  * It ends when you've been inactive for 10 minutes (see [configure](#configure) to change this value).
+  * The "end-time" is updated every 10 seconds (see [configure](#configure) to change this value).
+  * Having 10 windows open, only counts as 1 session. A session is a segment of time you start interacting with the app and ultimately stop.
+
+#### Metadata
 
 Metadata can be important for tracking the application usage. Metadata is a key-value object that stores information about the record/activity/session that can the be grouped, bucketed, etc. For example, if an activity were `"buy_product"`, a good piece of metadata would be the price of the product. So you could set metadata to `{ price: 7.99 }`. Then, in the Mezure application, you could see all `"buy_product"` activities grouped by price.
 
-### Identifiers
+#### Identifiers
 
 Identifiers are unique values associated with a record/activity/session. It is a key-value object that stores this information. For example, if you want to log an activity `"buy_product"`, a good identifier would be the username of who bought this product. So you could set identifiers to `{ username: 'uhray_team'}`. Then, in the Mezure application, you could see a breakdown of how many unique usernames bought a product, or how many bought 10+ products, or how many bought 100+ products, etc.
 
