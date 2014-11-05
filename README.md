@@ -49,10 +49,10 @@ To log things to a current activity stream, see the [activity](#activity) method
 
 A session has these rules:
 
-  * It starts when you open any page for the site
+  * It starts when you open any page for the site.
   * It ends when you've been inactive for 10 minutes (see [configure](#configure) to change this value).
   * The "end-time" is updated every 10 seconds (see [configure](#configure) to change this value).
-  * Having 10 windows open, only counts as 1 session. A session is a segment of time you start interacting with the app and ultimately stop.
+  * Having 10 windows open, only counts as 1 session. A session is a segment of time you start interacting with the app and ultimately stop. However, this is not unique to user id but to device/browser. So being active on a phone and on the web at the same time would be two sessions.
 
 #### Metadata
 
