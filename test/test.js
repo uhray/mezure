@@ -17,5 +17,6 @@ requirejs(['mezure', 'debug'], function(mezure, debug) {
 
   mezure.session({ age: 7 }, { user: '77ab8ab8a' });
   mezure.activity('home');
+  mezure.activity('nextpage');
 });
 

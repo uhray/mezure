@@ -1,6 +1,7 @@
 ;(function(root) {
 
-  var mezure = {},
+  var root = root || {},
+      mezure = {},
       config = {
         url: 'http://127.0.0.1:5000/api/v1',
         sessionReset: 5 * 60 * 1e3,
@@ -12,12 +13,12 @@
         identifiers: {}
       };
 
-  window.onfocus = function () {
+  root.onfocus = function () {
     mezure.__debug('active window');
     session.isActive = true;
   };
 
-  window.onblur = function () {
+  root.onblur = function () {
     session.isActive = false;
     mezure.__debug('inactive window');
   };
@@ -26,6 +27,7 @@
   mezure.__config = config;
   mezure.__debug = root.debug ? root.debug('mezure') : noop;
   mezure.__started_session = false;
+  mezure.__initialized_activity = false;
 
   mezure.configure = function(cfg) {
     merge(config, cfg);
@@ -44,11 +46,43 @@
   }
 
   mezure.activity = function(name, meta, ids) {
-    var name = name && '-mezure-activity-' + name,
+    var fn = arguments.callee,
+        name = name && ('-mezure-activity-' + name),
         prep = prepArgs(name, 1, meta, ids, null);
+
+    // invalid args
     if (!prep) return;
-    mezure.__debug('going to create record %s --> %j', name, prep.obj);
-    sendRecord(name, 'activity', prep.obj, prep.cb);
+
+    // set up queuer
+    fn.queue = fn.queue || [];
+    fn.queue.push(prep);
+    mezure.__debug('queueing activity', name);
+
+    // start queueing
+    if (fn.going) return;
+    else go(fn.queue.shift());
+
+    function go(prep) {
+      var refData;
+
+      if (!prep) return fn.going = false;
+      refData = getActivityReferrer();
+
+      fn.going = true;
+      prep.obj.metadata.referrer = refData.referrer;
+      mezure.__debug('activity referrer data: %j', refData);
+      mezure.__debug('going to create activity %s --> %j', prep.name, prep.obj);
+      sendRecord(prep.name, 'activity', prep.obj, function(e, id) {
+        fn.going = false;
+        if (!e && id) {
+          refData.referrer = id;
+          refData.time = new Date().getTime();
+          setObject('activity_streams', refData.name, refData);
+          mezure.__debug('activited created at %s', id);
+        }
+        go(fn.queue.shift());
+      });
+    }
   }
 
   mezure.record = function(name, value, meta, ids, cb) {
@@ -74,12 +108,7 @@
     var create;
 
     // required
-    if (!name || value == undefined) return;
-
-    // defaults
-    meta = meta || {};
-    ids = ids || {};
-    cb = cb || noop;
+    if (!name || value == undefined) return cb('invalid args');
 
     // if no meta or ids
     if ('function' === typeof meta) {
@@ -94,13 +123,71 @@
       ids = {};
     }
 
+    // defaults
+    meta = (meta && copy(meta)) || {};
+    ids = (ids && copy(ids)) || {};
+    cb = cb || noop;
+
+    // make object
     create = {
       value: value,
       metadata: meta,
       identifiers: ids
     };
 
-    return { obj: create, cb: cb };
+    return { obj: create, cb: cb, name: name };
+  }
+
+  function copy(d) {
+    return JSON.parse(JSON.stringify(d));
+  }
+
+  function getActivityReferrer(cb) {
+    var docRef = root.document && root.document.referrer,
+        wname = root.name,
+        streams = getObject('activity_streams'),
+        data = streams[wname],
+        streams, sameOrigin, m, diff;
+
+    // need to figure out of continued or old stream
+    if (!mezure.__initialized_activity || !data) {
+      mezure.__initialized_activity = true;
+      m = docRef && docRef.match(/:\/\/(.[^/:]+)/)
+      sameOrigin = m && m[1] && m[1] == root.location.hostname;
+      mezure.__initialized_activity;
+
+      // same origin, same name, has data -- continued stream
+      if (docRef && sameOrigin && wname && data) return data;
+
+      // clear out old data
+      for (m in streams) {
+        diff = Math.abs(new Date(streams[m].time).getDay() -
+                        new Date().getDay());
+        if (diff > 2) clearKey('activity_streams', m);
+      }
+
+      // start new stream
+      wname = root.name = uuid();
+      mezure.__debug('activity init - new window', wname);
+      m = { referrer: null, time: new Date().getTime(), name: wname };
+      setObject('activity_streams', wname, m);
+      return m;
+    }
+
+    // should always have data now that it's a continuation
+    mezure.__initialized_activity = true;
+    return data;
+  }
+
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+  };
+
+  function uuid() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
   }
 
   function merge(a, b) {
@@ -253,8 +340,22 @@
     for (k in ls) if (k.match(/^mezure/)) ls.removeItem(k);
   }
 
-  function setObject(s, d) {
-    var old = getObject(s);
+  function clearKey(n, k) {
+    var data = getObject(n);
+    if (data.hasOwnProperty(k)) delete data[k];
+    setItem(n, JSON.stringify(data));
+  }
+
+  function setObject(s, d, v) {
+    var old = getObject(s),
+        x;
+
+    if (arguments.length == 3) {
+      x = {};
+      x[d] = v;
+      d = x;
+    }
+
     setItem(s, JSON.stringify(merge(old, d)));
   }
 
