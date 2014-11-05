@@ -16,17 +16,17 @@ bower install mezure
 
 Use:
 ```js
-  // configure
-  mezure.configure({ license: '<LICENSE KEY>' });
+// configure
+mezure.configure({ license: '<LICENSE KEY>' });
 
-  // DEPRECATED - log a record
-  mezure.record('users', 1)  // logging 1 user
+// DEPRECATED - log a record
+mezure.record('users', 1)  // logging 1 user
 
-  // turn on session watching
-  mezure.session();
+// turn on session watching
+mezure.session();
 
-  // log activity
-  mezure.activity('view_homepage');
+// log activity
+mezure.activity('view_homepage');
 ```
 
 ## Overview
