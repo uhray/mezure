@@ -86,7 +86,7 @@ Log's the user's activity.
 
 <a href="#session" name="session">#</a> mezure.**session**(*meta*,  *ids*)
 
-If called the first time, this turns on session tracking and then sets the data for tracking. Otherwise, it just updates the data.
+If called the first time, this turns on session tracking and then sets the specified metadata and identifiers for the session. Otherwise, it just updates the metadata and identifiers.
 
   * *meta* (type=Object, default=`{}`) - [metadata](#metadata) about this session.
   * *ids* (type=Object, default=`{}`) - [identifiers](#identifiers) for this session.
@@ -100,6 +100,6 @@ To turn on debug messages in the console, set `mezure.__debug` to a console log 
 Example:
 
 ```js
-mezure.debug = console.log.bind(console);
+mezure.__debug = console.log.bind(console);
 ```
 
