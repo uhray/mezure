@@ -6,6 +6,26 @@
           data-main="/test/test.js"></script>
 
   <script>
+
+    function logActivity(a) {
+      var metadata = {
+            gender: document.querySelector('.name').value,
+            age: document.querySelector('.age').value
+          },
+          ids = {
+            user: document.querySelector('.user').value
+          };
+
+      if (!metadata.name) delete metadata.name;
+      else metadata.name = metadata.name.toUpperCase();
+      if (metadata.age) metadata.age = parseInt(metadata.age);
+      if (!metadata.age) delete metadata.age;
+      if (!ids.user) delete ids.user;
+
+      if (a) mezure.activity(a, metadata, ids);
+      else mezure.session(a, ids);
+    }
+
   </script>
 
 </head>
@@ -16,6 +36,31 @@
   <a href="/test">same window</a>
   <br>
   <a href="/test" target="_blank">new window</a>
+
+  <h1>Metadata</h1>
+  <div>
+    <label>gender <input class="name" value="M"/></label><br/>
+    <label>age <input class="age" value="7"/></label><br/>
+    <label>user <input class="user" value="77ab8ab8a"/></label>
+    <a href="javascript:logActivity()">Update Session</a>
+  </div>
+
+  <h1>Actions</h2>
+  <ul>
+    <li><a href="javascript:logActivity('addToCart')">Add to cart</a></li>
+    <li><a href="javascript:logActivity('checkout')">Checkout</a></li>
+    <li><a href="javascript:logActivity('search')">Search</a></li>
+    <li><a href="javascript:logActivity('upload')">Upload</a></li>
+    <li><a href="javascript:logActivity('removeUser')">Remove User</a></li>
+    <li><a href="javascript:logActivity('search')">Add Account</a></li>
+    <li><a href="javascript:logActivity('logout')">Logout</a></li>
+    <li><a href="javascript:logActivity('home')">home</a></li>
+    <li><a href="javascript:logActivity('contactPage')">contactPage</a></li>
+    <li><a href="javascript:logActivity('workCircles')">workCircles</a></li>
+    <li><a href="javascript:logActivity('leads')">leads</a></li>
+    <li><a href="javascript:logActivity('messages')">messages</a></li>
+    <li><a href="javascript:logActivity('import')">import</a></li>
+  </ul>
 
 </body>
 </html>
