@@ -108,7 +108,7 @@ mezure.__debug = console.log.bind(console);
 
 To use the example app, do the following:
 
-  1. Set your app license in [test/test.js](test/test.js);
+  1. Set your app license in [test/test.js](test/test.js)
 
   2. Launch server:
     ```
