@@ -6,6 +6,7 @@ A simple javascript API to interact with Mezure's api.
 * [Overview](#overview)
 * [API](#api)
 * [Debug](#debug)
+* [Example](#Example)
 
 ## Quickstart
 
@@ -103,3 +104,16 @@ Example:
 mezure.__debug = console.log.bind(console);
 ```
 
+## EXAMPLE
+
+To use the example app, do the following:
+
+  1. Set your app license in [test/test.js](test/test.js);
+
+  2. Launch server:
+    ```
+    npm install -g http-server
+    http-server .
+    ```
+
+  3. View App: go to `http://localhost:8080`.
