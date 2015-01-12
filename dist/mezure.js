@@ -3,7 +3,7 @@
   var root = root || {},
       mezure = {},
       config = {
-        url: 'http://127.0.0.1:5000/api/v1',
+        url: 'http://analytics.uhray.com/api/v1',
         sessionReset: 5 * 60 * 1e3,
         sessionTimeout: 10e3
       },
