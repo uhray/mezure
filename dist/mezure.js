@@ -1,7 +1,8 @@
 ;(function(root) {
-
   var root = root || {},
-      mezure = {},
+      mezure = {
+        enabled: true
+      },
       config = {
         url: 'http://analytics.uhray.com/api/v1',
         sessionReset: 5 * 60 * 1e3,
@@ -360,32 +361,36 @@
   }
 
   function request(method, url, data, cb) {
-    var req = typeof(XMLHttpRequest) != 'undefined'
-                ? new XMLHttpRequest()
-                : new ActiveXObject('Microsoft.XMLHTTP');
+    try {
+      var req = typeof(XMLHttpRequest) != 'undefined'
+                  ? new XMLHttpRequest()
+                  : new ActiveXObject('Microsoft.XMLHTTP');
 
-    req.open(method, url, true);
-    req.setRequestHeader('Content-type', 'application/json');
-    req.setRequestHeader('-mezure-license-', config.license);
-    req.onreadystatechange = function() {
-      var status, data, error;
-      if (req.readyState == 4) {  // done
-        status = req.status;
-        if (status == 200) {
-          try {
-            data = JSON.parse(req.responseText);
-            error = data && data.error;
-            data = data && data.data;
-          } catch (e) { error = 'invalid json response' };
-        } else {
-          error = { code: status, message: 'invalid status code' };
+      req.open(method, url, true);
+      req.setRequestHeader('Content-type', 'application/json');
+      req.setRequestHeader('-mezure-license-', config.license);
+      req.onreadystatechange = function() {
+        var status, data, error;
+        if (req.readyState == 4) {  // done
+          status = req.status;
+          if (status == 200) {
+            try {
+              data = JSON.parse(req.responseText);
+              error = data && data.error;
+              data = data && data.data;
+            } catch (e) { error = 'invalid json response' };
+          } else {
+            error = { code: status, message: 'invalid status code' };
+          }
+          return cb && cb(error, data);
         }
-        return cb && cb(error, data);
       }
-    }
 
-    if (data) req.send(JSON.stringify(data));
-    else req.send();
+      if (data) req.send(JSON.stringify(data));
+      else req.send();
+    } catch (e) {
+      mezure.enabled = false;
+    }
   }
 
 })(this);
