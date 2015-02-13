@@ -12,7 +12,8 @@
         isActive: true,
         metadata: {},
         identifiers: {}
-      };
+      },
+      localStorage = checkLocalStorage();
 
   root.onfocus = function () {
     mezure.__debug('active window');
@@ -317,7 +318,7 @@
   }
 
   function getItem(d, or) {
-    var ls = root && root.localStorage,
+    var ls = localStorage,
         license, str;
 
     if (!ls) return or;
@@ -328,13 +329,13 @@
   }
 
   function setItem(s, d) {
-    var ls = root && root.localStorage;
+    var ls = localStorage;
     if (!d || !ls) return;
     ls.setItem('mezure-' + s, d);
   }
 
   function clearStorage() {
-    var ls = root && root.localStorage,
+    var ls = localStorage,
         k;
 
     if (!ls) return or;
@@ -390,6 +391,20 @@
       else req.send();
     } catch (e) {
       mezure.enabled = false;
+    }
+  }
+
+  function checkLocalStorage() {
+    try {
+      localStorage.setItem(mod, mod);
+      localStorage.removeItem(mod);
+      return localStorage;
+    } catch(e) {
+      return root.localStorage = {
+        setItem: function(k, v) { localStorage._store[k] = v; },
+        getItem: function(k) { return localStorage._store[k]; },
+        _store: {}
+      }
     }
   }
 
