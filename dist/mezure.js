@@ -396,8 +396,8 @@
 
   function checkLocalStorage() {
     try {
-      localStorage.setItem(mod, mod);
-      localStorage.removeItem(mod);
+      localStorage.setItem('testls', 7);
+      localStorage.removeItem('testls');
       return localStorage;
     } catch(e) {
       return root.localStorage = {
